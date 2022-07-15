@@ -48,10 +48,7 @@ class Board extends React.Component {
 
   renderSquare(i) {
     return (
-      // <Square
-      //   value={this.state.squares[i]}
-      //   onClick={() => this.handleClick(i)}
-      // />
+      // Refactor so it works with hooks
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
@@ -73,7 +70,6 @@ class Board extends React.Component {
 
     return (
       <div>
-        {/* <div className='status'>{status}</div> */}
         <div className='board-row'>
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -106,6 +102,7 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
+      playComp: true,
     };
   }
 
@@ -141,6 +138,23 @@ class Game extends React.Component {
     });
   }
 
+  // ******************
+  // AI LOGIC
+
+  computersTurn() {
+    // Lot of stuff reused from handleClick
+    // needs refactor
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    console.log("my turn!");
+    console.log(squares);
+  }
+  toggleComputerOpponent = (e) => {
+    this.setState({ playComp: !this.state.playComp });
+  };
+  // ******************
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -160,6 +174,9 @@ class Game extends React.Component {
       status = "Winner: " + winner;
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      if (this.state.xIsNext === false && this.state.playComp) {
+        this.computersTurn();
+      }
     }
 
     return (
@@ -169,6 +186,15 @@ class Game extends React.Component {
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
+          <div>
+            <input
+              type='checkbox'
+              value='playComp'
+              defaultChecked={this.state.playComp}
+              onClick={this.toggleComputerOpponent}
+            />
+            Play against computer
+          </div>
         </div>
         <div className='game-info'>
           <div>{status}</div>
@@ -196,9 +222,9 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     // console.table(lines);
-    console.log(
-      `a:${a}, b:${b}, c:${c}, sa:${squares[a]}, sb:${squares[b]}, sc:${squares[c]}`
-    );
+    // console.log(
+    //   `a:${a}, b:${b}, c:${c}, sa:${squares[a]}, sb:${squares[b]}, sc:${squares[c]}`
+    // );
     // Using truthiness to check: if it exists
     // AND finds all x's or all o's in any of the positions in i
     // we have a winner!
@@ -206,6 +232,6 @@ function calculateWinner(squares) {
       return squares[a];
     }
   }
-  console.log("-----");
+  //console.log("-----");
   return null;
 }
