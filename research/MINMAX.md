@@ -1,4 +1,6 @@
-# MINIMAX
+# AI TIC-TAC-TOE
+
+## MINIMAX
 
 Pseudocode from Norvig & Russell's *Artificial Intelligence*, p. 196
 
@@ -28,7 +30,7 @@ function MIN-VAL(*game, state*) **returns** a (*utility, move*) pair
                *v, move* <- *v2, a*  
      **return** *v, move*
 
-## Notes:
+### Notes:
 
 Utility values = [-1, 0, 1] or [x win, draw, o win]  
 Move = Action  
@@ -42,3 +44,15 @@ MAX moves first
 * IS-TERMINAL(*s*): A **terminal test**, which is true when the game is over and false otherwise. States where the game has ended are called **terminal states.**
 * UTILITY(*s, p*): A **utility function** (also called an objective function or payoff function), which defines the final numeric value to player *p* when the game ends in terminal state *s*.
 
+## ALPHA-BETA PRUNING
+
+http://www.cs.cornell.edu/courses/cs312/2002sp/lectures/rec21.htm
+
+[Geeks for Geeks Minimax Algorithm in Game Theory:](https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/)
+
+"Alpha-Beta pruning is an optimization technique for [the] minimax algorithm. It reduces the computation time by a huge factor...by cutting off branches in the game tree which need not be searched because there is already a better move available. It is called Alpha-Beta pruning because it passes 2 extra parameters in the minimax function, namely alpha and beta."
+
+
+**Alpha** is the best value that the maximizer currently can guarantee at that level or above.  
+
+**Beta** is the best value that the minimizer currently can guarantee at that level or above.

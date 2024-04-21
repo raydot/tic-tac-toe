@@ -149,7 +149,25 @@ class Game extends React.Component {
     const squares = current.squares.slice();
     console.log("my turn!");
     console.log(squares);
+    // console.log(
+    //   "empty one:",
+    //   squares.findIndex((item) => item === null)
+    // );
+    // Dumb AI: Find the next empty square and put an O in it.
+    let nextPlay = squares.findIndex((item) => item === null);
+    squares[nextPlay] = "O";
+
+    this.setState({
+      history: history.concat([
+        {
+          squares,
+        },
+      ]),
+      stepNumber: history.length,
+      xIsNext: !this.state.xIsNext,
+    });
   }
+
   toggleComputerOpponent = (e) => {
     this.setState({ playComp: !this.state.playComp });
   };

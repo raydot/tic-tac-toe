@@ -15,3 +15,6 @@ function minimax_search(game, state) {
   }
   return best_move;
 }
+
+// alpha-beta algorithm
+// function alphabeta_search(game, state, depth, alpha, beta)
