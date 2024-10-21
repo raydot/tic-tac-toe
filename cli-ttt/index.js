@@ -2,7 +2,7 @@ import inquirer from "inquirer"
 import computerMoves from "./computerMoves.js"
 
 function drawBoard(board) {
-  console.clear()
+  // console.clear()
   board.forEach((row, index) => {
     console.log(row.join(" | "))
     if (index < board.length - 1) {
