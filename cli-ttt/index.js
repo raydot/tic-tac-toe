@@ -94,17 +94,6 @@ const promptMove = async (board, currentPlayer) => {
   ])
 
   return { row: row - 1, col: col - 1 }
-
-  // console.log(row, col, currentPlayer, board)
-  // console.log("board[row - 1][col - 1]", `"${board[row - 1][col - 1]}"`)
-  // console.log(board[row - 1][col - 1] === " ")
-  // if (board[row - 1][col - 1] === " ") {
-  //   board[row - 1][col - 1] = currentPlayer
-  // } else {
-  //   console.log("That space is already taken!")
-  //   await promptMove(board, currentPlayer)
-  // }
-  // checkWinner(board, currentPlayer)
 }
 
 const updateBoard = (board, row, col, currentPlayer) => {
@@ -149,6 +138,10 @@ const getComputerMove = (board) => {
     })
   })
 
+  if (emptyCells.length === 0) {
+    return null
+  }
+
   const randomIndex = Math.floor(Math.random() * emptyCells.length)
   return emptyCells[randomIndex]
 }
@@ -174,9 +167,18 @@ const playGame = async () => {
         move = await promptMove(board, currentPlayer)
       } else {
         move = getComputerMove(board)
+        if (!move) {
+          console.log("No valid moves left for the computer.")
+          break
+        }
         console.log(`Computer move: ${move[0] + 1}, ${move[1] + 1}`)
       }
-      //await promptMove(board, currentPlayer)
+
+      if (!move) {
+        console.log("Invalid move detected.")
+        continue
+      }
+
       const newBoard = updateBoard(board, move[0], move[1], currentPlayer)
 
       if (newBoard) {
@@ -200,12 +202,3 @@ const playGame = async () => {
 }
 
 playGame()
-
-// tester
-// const board = [
-//   ["X", "O", "X"],
-//   ["O", "X", "O"],
-//   ["X", " ", "O"],
-// ]
-
-// drawBoard(board)
