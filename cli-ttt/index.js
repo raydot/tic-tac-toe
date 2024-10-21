@@ -1,4 +1,5 @@
 import inquirer from "inquirer"
+import computerMoves from "./computerMoves.js"
 
 function drawBoard(board) {
   console.clear()
@@ -64,6 +65,10 @@ function checkWinner(board, currentPlayer) {
     : false
 }
 
+function makeMove(board, { row, col }, currentPlayer) {
+  board[row][col] = currentPlayer
+}
+
 const isBoardFull = (board) =>
   board.every((row) => row.every((cell) => cell !== " "))
 
@@ -102,7 +107,7 @@ const promptMove = async (board, currentPlayer) => {
     console.log("That space is already taken!")
     await promptMove(board, currentPlayer)
   }
-  // checkWinner(board, currentPlayer)
+  return { row: row - 1, col: col - 1 }
 }
 
 async function promptPlayAgain() {
@@ -118,6 +123,15 @@ async function promptPlayAgain() {
 }
 
 async function playGame() {
+  const { againstComputer } = await inquirer.prompt([
+    {
+      type: "confirm",
+      name: "againstComputer",
+      message: "Would you like to play against the computer?",
+      default: true,
+    },
+  ])
+
   let playAgain = true
 
   while (playAgain) {
@@ -132,7 +146,19 @@ async function playGame() {
 
     while (!winner && !isBoardFull(board)) {
       drawBoard(board)
-      await promptMove(board, currentPlayer)
+      let move
+      if (currentPlayer === "O" && againstComputer) {
+        move = computerMoves(board, currentPlayer)
+      } else {
+        move = await promptMove(board, currentPlayer)
+      }
+
+      try {
+        makeMove(board, move, currentPlayer)
+      } catch {
+        console.log("Invalid move. Try again.")
+        continue
+      }
 
       // check for winner
       winner = checkWinner(board, currentPlayer)
