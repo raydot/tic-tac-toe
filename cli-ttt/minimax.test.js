@@ -63,7 +63,7 @@ describe("minimax", () => {
     const currentPlayer = "O"
     const opponent = "X"
     expect(minimax(board, depth, isMaximizing, currentPlayer, opponent)).toBe(
-      -10 + depth
+      10 - depth
     )
   })
 
@@ -74,7 +74,7 @@ describe("minimax", () => {
     const currentPlayer = "O"
     const opponent = "X"
     expect(minimax(board, depth, isMaximizing, currentPlayer, opponent)).toBe(
-      -10 + depth
+      10 - depth
     )
   })
 
@@ -85,7 +85,7 @@ describe("minimax", () => {
     const currentPlayer = "O"
     const opponent = "X"
     expect(minimax(board, depth, isMaximizing, currentPlayer, opponent)).toBe(
-      -10 + depth
+      10 - depth
     )
   })
 
@@ -96,7 +96,7 @@ describe("minimax", () => {
     const currentPlayer = "O"
     const opponent = "X"
     expect(minimax(board, depth, isMaximizing, currentPlayer, opponent)).toBe(
-      -10 + depth
+      10 - depth
     )
   })
 
@@ -107,7 +107,7 @@ describe("minimax", () => {
     const currentPlayer = "O"
     const opponent = "X"
     expect(minimax(board, depth, isMaximizing, currentPlayer, opponent)).toBe(
-      -10 + depth
+      10 - depth
     )
   })
 

@@ -1,5 +1,3 @@
-// Computer logic here:
-
 // Winning Combinations on one-d format
 const winningCombinations = [
   // Rows
@@ -15,16 +13,6 @@ const winningCombinations = [
   [2, 4, 6],
 ]
 
-function convertTo2D(index) {
-  const row = Math.floor(index / 3)
-  const col = index % 3
-  return { row, col }
-}
-
-function convertTo1D(board2D) {
-  return board2D.flat()
-}
-
 export function checkWinner(board, player) {
   // console.log("player", player)
   return winningCombinations.some((combination) =>
@@ -36,7 +24,7 @@ export function checkWinner(board, player) {
 
 function isBoardFull(board) {
   // DRAW!
-  return board.every((cell) => cell !== " ")
+  return board.every((cell) => cell === "X" || cell === "O")
 }
 
 export function evaluateBoard(board, depth, currentPlayer, opponent) {
@@ -44,129 +32,73 @@ export function evaluateBoard(board, depth, currentPlayer, opponent) {
   const winnerOpponent = checkWinner(board, opponent)
 
   if (winnerCurrentPlayer) {
-    console.log("Winner:", currentPlayer, "Score:", 10 - depth)
+    //vconsole.log("Winner:", currentPlayer, "Score:", 10 - depth)
     return 10 - depth
   }
   if (winnerOpponent) {
-    console.log("Winner:", opponent, "Score:", depth - 10)
+    // console.log("Winner:", opponent, "Score:", depth - 10)
     return depth - 10
   }
   if (isBoardFull(board)) {
-    console.log("Draw - Score: 0")
+    // console.log("Draw - Score: 0")
     return 0
   }
   return null // no winner or draw, only losers
 }
 
 export function minimax(board, depth, isMaximizing, currentPlayer, opponent) {
-  console.log("depth:", depth, "isMaximizing:", isMaximizing, "board:", board)
+  // console.log("depth:", depth, "isMaximizing:", isMaximizing, "board:", board)
 
   const score = evaluateBoard(board, depth, currentPlayer, opponent)
   if (score !== null) {
     return score
   }
 
-  if (isMaximizing) {
-    // console.log("MAXING!")
-    let bestScore = -Infinity
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === " ") {
-        board[i] = currentPlayer
-        const score = minimax(board, depth + 1, true, opponent, currentPlayer)
-        board[i] = " "
-        console.log("Maximizing - Move:", i, "Score:", score)
-        bestScore = Math.max(score, bestScore)
-      }
-    }
-    console.log("Maximizing - Best score:", bestScore)
-    return bestScore
-  } else {
-    // console.log("MINING!")
-    let bestScore = Infinity
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === " ") {
-        board[i] = opponent
-        const score = minimax(board, depth + 1, false, currentPlayer, opponent)
-        board[i] = " "
-        console.log("Minimizing - Move:", i, "Score:", score)
-        bestScore = Math.min(score, bestScore)
-      }
-    }
-    console.log("Minimizing - Best score:", bestScore)
-    return bestScore
-  }
-}
-
-export function computerMove(board2d, currentPlayer) {
-  const board = convertTo1D(board2d)
-  const opponent = currentPlayer === "X" ? "O" : "X"
-  let bestScore = -Infinity
+  let bestScore = isMaximizing ? -Infinity : Infinity
   let bestMove = null
 
   for (let i = 0; i < board.length; i++) {
-    if (board[i] === " ") {
+    if (board[i] !== "X" && board[i] !== "O") {
+      const originalValue = board[i]
       board[i] = currentPlayer
-      const score = minimax(board, 0, false, opponent, currentPlayer)
-      board[i] = " "
-      if (score > bestScore) {
-        bestScore = score
-        bestMove = i
+      const score = minimax(
+        board,
+        depth + 1,
+        !isMaximizing,
+        opponent,
+        currentPlayer
+      )
+      board[i] = originalValue
+
+      if (isMaximizing) {
+        if (score > bestScore) {
+          bestScore = score
+          bestMove = i
+        }
+      } else {
+        if (score < bestScore) {
+          bestScore = score
+          bestMove = i
+        }
       }
     }
   }
 
-  console.log("Best move:", convertTo2D(bestMove), "Best score:", bestScore)
-  return bestMove !== null ? convertTo2D(bestMove) : null
-}
-
-// MEDIUM SMART VERSION BELOW THIS LINE:
-/** 
-function findWinningOrBlockingMove(board, player) {
-  for (const combination of winningCombinations) {
-    const cells = combination.map((index) => board[index])
-
-    if (
-      cells.filter((cell) => cell === player).length === 2 &&
-      cells.includes(" ")
-    ) {
-      const emptyIndex = cells.indexOf(" ")
-      return convertTo2D(combination[emptyIndex])
-    }
+  if (depth === 0) {
+    // console.log("Best move:", bestMove, "Best score:", bestScore)
+    return bestMove
   }
-  return null
+  return bestScore
 }
 
-function computerMove(board2D, currentPlayer) {
-  // Mildly smart version, will play block or win if available.
-  // convert the 2d board to a 1d board.
-  const board = convertTo1D(board2D)
-  // console.log(board)
-  let opponent = currentPlayer === "X" ? "O" : "X"
-
-  // Check for winning move
-  let move = findWinningOrBlockingMove(board, currentPlayer)
-  if (move) return move
-
-  // Check for blocking move
-  move = findWinningOrBlockingMove(board, opponent)
-  if (move) return move
-
-  // If no blocking move, find the first empty cell.
-  const emptyCell = board.findIndex((cell) => cell === " ")
-
-  return emptyCell !== -1 ? convertTo2D(emptyCell) : null
-
-  // First iteration, find the next empty cell.
-  // const emptyCell = board
-  //   .flatMap((row, rowIndex) =>
-  //     row.map((cell, colIndex) =>
-  //       cell === " " ? { row: rowIndex, col: colIndex } : null
-  //     )
-  //   )
-  //   .find((cell) => cell !== null)
-
-  // return emptyCell
+export function computerMove(board, currentPlayer) {
+  return minimax(
+    board,
+    0,
+    true,
+    currentPlayer,
+    currentPlayer === "X" ? "O" : "X"
+  )
 }
-*/
 
 export default computerMove
