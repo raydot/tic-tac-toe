@@ -3,111 +3,72 @@ import computerMoves from "./computerMoves.js"
 
 function drawBoard(board) {
   // console.clear()
-  board.forEach((row, index) => {
-    console.log(row.join(" | "))
-    if (index < board.length - 1) {
+  for (let i = 0; i < board.length; i += 3) {
+    console.log(board.slice(i, i + 3).join(" | "))
+    if (i < board.length - 3) {
       console.log("---------")
     }
-  })
+  }
 }
 
 function checkWinner(board, currentPlayer) {
   const winningCombinations = [
     // Rows
-    [
-      [0, 0],
-      [0, 1],
-      [0, 2],
-    ],
-    [
-      [1, 0],
-      [1, 1],
-      [1, 2],
-    ],
-    [
-      [2, 0],
-      [2, 1],
-      [2, 2],
-    ],
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
     // Columns
-    [
-      [0, 0],
-      [1, 0],
-      [2, 0],
-    ],
-    [
-      [0, 1],
-      [1, 1],
-      [2, 1],
-    ],
-    [
-      [0, 2],
-      [1, 2],
-      [2, 2],
-    ],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
     // Diagonals
-    [
-      [0, 0],
-      [1, 1],
-      [2, 2],
-    ],
-    [
-      [0, 2],
-      [1, 1],
-      [2, 0],
-    ],
+    [0, 4, 8],
+    [2, 4, 6],
   ]
 
   return winningCombinations.some((combination) =>
-    combination.every(([row, col]) => board[row][col] === currentPlayer)
+    combination.every((index) => board[index] === currentPlayer)
   )
     ? currentPlayer
     : false
 }
 
-function makeMove(board, { row, col }, currentPlayer) {
-  board[row][col] = currentPlayer
+function makeMove(board, index, currentPlayer) {
+  board[index] = currentPlayer
 }
 
 const isBoardFull = (board) =>
-  board.every((row) => row.every((cell) => cell !== " "))
+  board.every((cell) => cell === "X" || cell === "O")
 
 const promptMove = async (board, currentPlayer) => {
-  const { row, col } = await inquirer.prompt([
+  const { move } = await inquirer.prompt([
     {
       type: "input",
-      name: "row",
-      message: `Player ${currentPlayer}, enter your move row (1, 2, or 3):`,
+      name: "move",
+      message: `Player ${currentPlayer}, enter your move square (1-9) or 'q' to quit:`,
       validate: (input) => {
-        const row = Number(input)
-        return row >= 1 && row <= 3
+        if (input.toLowerCase() === "q") {
+          return true
+        }
+        const move = Number(input)
+        return move >= 1 &&
+          move <= 9 &&
+          board[move - 1] !== "X" &&
+          board[move - 1] !== "O"
           ? true
-          : "Please enter a valid row (1, 2, or 3)"
-      },
-    },
-    {
-      type: "input",
-      name: "col",
-      message: `Player ${currentPlayer}, enter your move column (1, 2, or 3):`,
-      validate: (input) => {
-        const col = Number(input)
-        return col >= 1 && col <= 3
-          ? true
-          : "Please enter a valid column (1, 2, or 3)"
+          : "Please enter a valid, empty move square (1-9) or 'q' to quit."
       },
     },
   ])
 
-  // console.log(row, col, currentPlayer, board)
-  // console.log("board[row - 1][col - 1]", `"${board[row - 1][col - 1]}"`)
-  // console.log(board[row - 1][col - 1] === " ")
-  if (board[row - 1][col - 1] === " ") {
-    board[row - 1][col - 1] = currentPlayer
-  } else {
-    console.log("That space is already taken!")
-    await promptMove(board, currentPlayer)
+  if (move.toLowerCase() === "q") {
+    console.log("Game ended by player.")
+    process.exit()
   }
-  return { row: row - 1, col: col - 1 }
+
+  const index = Number(move - 1)
+  board[index] = currentPlayer
+  return index
 }
 
 async function promptPlayAgain() {
@@ -135,11 +96,7 @@ async function playGame() {
   let playAgain = true
 
   while (playAgain) {
-    const board = [
-      [" ", " ", " "],
-      [" ", " ", " "],
-      [" ", " ", " "],
-    ]
+    const board = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
     let currentPlayer = "X"
     let winner = null
@@ -179,12 +136,3 @@ async function playGame() {
 }
 
 playGame()
-
-// tester
-// const board = [
-//   ["X", "O", "X"],
-//   ["O", "X", "O"],
-//   ["X", " ", "O"],
-// ]
-
-// drawBoard(board)
