@@ -97,7 +97,7 @@ export function minimax(board, depth, isMaximizing, currentPlayer, opponent) {
   }
 }
 
-function computerMove(board2d, currentPlayer) {
+export function computerMove(board2d, currentPlayer) {
   const board = convertTo1D(board2d)
   const opponent = currentPlayer === "X" ? "O" : "X"
   let bestScore = -Infinity
@@ -137,7 +137,7 @@ function findWinningOrBlockingMove(board, player) {
 }
 
 function computerMove(board2D, currentPlayer) {
-  // Midly smart version, will play block or win if available.
+  // Mildly smart version, will play block or win if available.
   // convert the 2d board to a 1d board.
   const board = convertTo1D(board2D)
   // console.log(board)
