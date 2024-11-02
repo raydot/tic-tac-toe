@@ -32,7 +32,7 @@ export function evaluateBoard(board, depth, currentPlayer, opponent) {
   const winnerOpponent = checkWinner(board, opponent)
 
   if (winnerCurrentPlayer) {
-    //vconsole.log("Winner:", currentPlayer, "Score:", 10 - depth)
+    // console.log("Winner:", currentPlayer, "Score:", 10 - depth)
     return 10 - depth
   }
   if (winnerOpponent) {

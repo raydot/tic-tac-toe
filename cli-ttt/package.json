@@ -1,22 +1,22 @@
 {
   "name": "cli-ttt",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "jest"
   },
+  "files": [
+    "index.js",
+    "computerMoves.js"
+  ],
   "keywords": [],
   "author": "Davey Struts",
   "license": "Unlicense",
-  "description": "Command line tic-tac-toe game",
+  "description": "Javascript Command line tic-tac-toe game using minimax.",
+  "bin": "./index.js",
   "dependencies": {
-    "chalk": "^5.3.0",
-    "chalk-animation": "^2.0.3",
-    "figlet": "^1.8.0",
-    "gradient-string": "^3.0.0",
-    "inquirer": "^12.0.0",
-    "nanospinner": "^1.1.0"
+    "inquirer": "^12.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
